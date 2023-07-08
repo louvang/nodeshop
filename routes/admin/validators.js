@@ -1,6 +1,17 @@
 import { check } from 'express-validator';
 import usersRepo from '../../repositories/users.js';
 
+const requireTitle = check('title')
+  .trim()
+  .isLength({ min: 5, max: 40 })
+  .withMessage('Must be between 5 to 40 characters.');
+
+const requirePrice = check('price')
+  .trim()
+  .toFloat()
+  .isFloat({ min: 1 })
+  .withMessage('Must be a number greater than 1');
+
 const requireEmail = check('email')
   .trim()
   .normalizeEmail()
@@ -26,6 +37,7 @@ const requirePasswordConfirmation = check('passwordConfirmation')
     if (passwordConfirmation !== req.body.password) {
       throw new Error('Passwords do not match');
     }
+    return true;
   });
 
 const requireEmailExists = check('email')
@@ -65,4 +77,6 @@ export {
   requirePasswordConfirmation,
   requireEmailExists,
   requireValidPasswordForUser,
+  requireTitle,
+  requirePrice,
 };
